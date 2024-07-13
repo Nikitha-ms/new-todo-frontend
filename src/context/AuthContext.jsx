@@ -1,93 +1,113 @@
-import { useState,createContext } from "react";
+import PropTypes from "prop-types";
+import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API from "../utils/API";
-import { useEffect } from "react";
+import API from "../utils/API.js";
+import  {jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext();
 
- const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const navigate = useNavigate();
+export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if (localStorage.getItem("withCreds"))
-          API.get("/auth/refresh")
-            .then((res) => {
-              if (res.data.success) {
-                setUser(res.data?.token);
-              } else {
-                setUser(null);
-                localStorage.removeItem("withCreds");
-                throw new Error("Failed to refresh token");
-              }
-            })
-            .catch((error) => {
-              setUser(null);
-            });
-      }, []);
+  const [user, setUser] = useState(null);
+  const [username , setUsername] = useState(null);
 
-      const register = async (username, email, password) => {
-        try {
-          const res = await API.post("/auth/register", {
-            username,
-            email,
-            password,
-          });
+  useEffect(() => {
+    if (localStorage.getItem("withCreds"))
+      API.get("/auth/refresh")
+        .then((res) => {
           if (res.data.success) {
+            const decoded = jwtDecode(res.data?.token);
             setUser(res.data?.token);
-            localStorage.setItem("withCreds", true);
+            setUsername(decoded.username);
           } else {
-            throw new Error(res.data.message);
-          }
-          return { success: true };
-        } catch (error) {
-          return { success: false, error: error.response?.data || error };
-        }
-      };
-
-      const login = async (email, password) => {
-        try {
-          const res = await API.post("/auth/login", { email, password });
-          if (res.data.success) {
-            setUser(res.data.token);
-            localStorage.setItem("withCreds", true);
-          } else {
-            throw new Error(res.data.message);
-          }
-          return { success: true };
-        } catch (error) {
-          return { success: false, error: error.response?.data || error };
-        }
-      };
-    
-      const logout = async () => {
-        try {
-          const res = await API.get("/auth/logout");
-          if (res.data.success) {
-            navigate("/auth");
             setUser(null);
+            setUsername(null);
             localStorage.removeItem("withCreds");
-          } else {
-            throw new Error(res.data.message);
+            throw new Error("Failed to refresh token");
           }
-          return { success: true };
-        } catch (error) {
-          return { success: false, error: error.response?.data || error };
-        }
-      };
-    
-      return (
-        <AuthContext.Provider
-          value={{
-            user,
-            register,
-            login,
-            logout,
-          }}
-        >
-          {children}
-        </AuthContext.Provider>
-      );
-    };
+        })
+        .catch((err) => {
+          setUser(null);
+          setUsername(null);
+        });
+  }, []);
 
-    export default AuthProvider;
+  const register = async (username, email, password) => {
+    try {
+      const res = await API.post("/auth/register", {
+        username,
+        email,
+        password,
+      });
+      if (res.data.success || res.status === 200) {
+        const decoded = jwtDecode(res.data?.token);
+        setUser(res.data?.token);
+        setUsername(decoded.username);
+        localStorage.setItem("withCreds", true);
+        alert("Registration successful!");
+        console.log(user);
+        console.log("registered successfully!");
+      } else {
+        throw new Error(res.data.message);
+      }
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.response?.data || error };
+    }
+  };
+
+  const login = async (email, password) => {
+    try {
+      const res = await API.post("/auth/login", { email, password });
+      if (res.data.success || res.status === 200) {
+        const decoded = jwtDecode(res.data.token);
+        setUser(res.data.token);
+        setUsername(decoded.username);
+        localStorage.setItem("withCreds", true);
+        console.log(user);
+        console.log("logged in successfully!");
+      } else {
+        throw new Error(res.data.message);
+      }
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.response?.data || error };
+    }
+  };
+
+  const logout = async () => {
+    try {
+      const res = await API.get("/auth/logout");
+      if (res.data.success) {
+        navigate("/auth");
+        setUser(null);
+        setUsername(null);
+        localStorage.removeItem("withCreds");
+      } else {
+        throw new Error(res.data.message);
+      }
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.response?.data || error };
+    }
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        username,
+        register,
+        login,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

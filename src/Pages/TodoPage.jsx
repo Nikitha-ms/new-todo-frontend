@@ -1,11 +1,13 @@
-import Todo from '../components/Todo'
+import Todo from "../components/Todo";
+import Nav from "../components/Nav";
 
 const TodoPage = () => {
   return (
     <div>
-        <Todo />
+      <Nav />
+      <Todo />
     </div>
-  )
-}
+  );
+};
 
-export default TodoPage
+export default TodoPage;

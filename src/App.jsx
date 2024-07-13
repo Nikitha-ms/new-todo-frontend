@@ -1,17 +1,18 @@
-import {useContext} from 'react'
+import { useContext } from 'react';
 import { useLocation, Navigate } from "react-router-dom";
 import AuthPage from './Pages/AuthPage';
 import TodoPage from './Pages/TodoPage';
-import {Routes, Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom";
 import "./index.css";
-import AuthContext from "./context/AuthContext";
+import { AuthContext } from "./context/AuthContext"; // Fix: correct the file path
 
 const App = () => {
-  const { user } =useContext(AuthContext);
-  const {pathname}=useLocation
+  const { user } = useContext(AuthContext);
+  
+  const { pathname } = useLocation(); 
   return (
     <div>
-   <Routes>
+      <Routes>
         <Route
           path="/"
           element={user ? <TodoPage /> : <Navigate to="/auth" state={pathname} />}
@@ -19,7 +20,7 @@ const App = () => {
         <Route path="/auth" element={user ? <Navigate to="/" /> : <AuthPage />} />
       </Routes>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

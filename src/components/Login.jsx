@@ -1,7 +1,9 @@
-import { useState } from "react";
-import API from "../utils/API";
+import { useState ,useContext} from "react";
+import PropTypes from "prop-types";
+import { AuthContext } from "../context/AuthContext";
 
-const Login = () => {
+const Login = ({setIsLogin}) => {
+  const { login } = useContext(AuthContext);
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -21,15 +23,7 @@ const Login = () => {
     }
   };
 
-  const login = async (email, password) => {
-    try {
-      const response = await API.post("/auth/login", { email, password });
-      console.log(response.data);
-    } catch (error) {
-      console.error("Login error:", error.response.data);
-      // Handle error, e.g., show error message to user
-    }
-  };
+
 
   return (
     <div className="flex flex-col w-full m-auto h-full items-center align">
@@ -51,8 +45,13 @@ const Login = () => {
         />
         <button onClick={handleLogin}>Login</button>
       </div>
+      <span onClick={() => setIsLogin(false)}>Go to Register</span>
     </div>
   );
+};
+
+Login.propTypes = {
+  setIsLogin: PropTypes.func.isRequired,
 };
 
 export default Login;

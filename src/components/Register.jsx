@@ -1,7 +1,9 @@
-import { useState } from "react";
-import API from "../utils/API";
-const Register = () => {
- 
+import { AuthContext } from "../context/AuthContext";
+import PropTypes from "prop-types";
+import { useContext, useState } from "react";
+
+const Register = ({ setIsLogin }) => {
+  const { register } = useContext(AuthContext);
   const [data, setData] = useState({
     username: "",
     email: "",
@@ -17,22 +19,6 @@ const Register = () => {
       return;
     } else {
       register(data.username, data.email, data.password);
-    }
-  };
-
-  const register = async (username, email, password) => {
-    try {
-      const response = await API.post("/auth/register", {
-        username,
-        email,
-        password,
-      });
-      console.log(response.data);
-      if (response.status === 200) {
-        alert("User Registered Successfully");
-      }
-    } catch (error) {
-      console.error("Registration error:", error.response.data);
     }
   };
 
@@ -64,8 +50,12 @@ const Register = () => {
 
         <button onClick={handleRegister}>Register</button>
       </div>
+      <span onClick={() => setIsLogin(true)}>Go to Login</span>
     </div>
   );
+};
+Register.propTypes = {
+  setIsLogin: PropTypes.func.isRequired,
 };
 
 export default Register;
