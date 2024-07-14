@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [username , setUsername] = useState(null);
+  const [id, setId] = useState(null);
 
   useEffect(() => {
     if (localStorage.getItem("withCreds"))
@@ -20,9 +21,11 @@ export const AuthProvider = ({ children }) => {
             const decoded = jwtDecode(res.data?.token);
             setUser(res.data?.token);
             setUsername(decoded.username);
+            setId(decoded._id);
           } else {
             setUser(null);
             setUsername(null);
+            setId(null);
             localStorage.removeItem("withCreds");
             throw new Error("Failed to refresh token");
           }
@@ -44,6 +47,7 @@ export const AuthProvider = ({ children }) => {
         const decoded = jwtDecode(res.data?.token);
         setUser(res.data?.token);
         setUsername(decoded.username);
+        setId(decoded._id);
         localStorage.setItem("withCreds", true);
         alert("Registration successful!");
         console.log(user);
@@ -64,6 +68,7 @@ export const AuthProvider = ({ children }) => {
         const decoded = jwtDecode(res.data.token);
         setUser(res.data.token);
         setUsername(decoded.username);
+        setId(decoded._id);
         localStorage.setItem("withCreds", true);
         console.log(user);
         console.log("logged in successfully!");
@@ -83,6 +88,7 @@ export const AuthProvider = ({ children }) => {
         navigate("/auth");
         setUser(null);
         setUsername(null);
+        setId(null);
         localStorage.removeItem("withCreds");
       } else {
         throw new Error(res.data.message);
@@ -98,6 +104,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         username,
+        id,
         register,
         login,
         logout,

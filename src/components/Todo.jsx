@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import API from "../utils/API";
 import Plus from "../assets/Plus.png";
 import DeleteIcon from "../assets/DeleteIcon.png";
@@ -6,11 +6,29 @@ import EditIcon from "../assets/EditIcon.png";
 import SaveIcon from "../assets/SaveIcon.png";
 import EraseIcon from "../assets/EraseIcon.png";
 import TaskDone from "../assets/TaskDone.png";
+import { AuthContext } from "../context/AuthContext";
+import { useEffect } from "react";
+
 const Todo = () => {
   const [tasks, setTasks] = useState("");
   const [taskList, setTaskList] = useState([]);
   const [editedTask, setEditedTask] = useState("");
   const [editIndex, setEditIndex] = useState(null);
+  const { id } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await API.get(`/tasks/${id}`);
+        setTaskList(response.data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+    if (id) {
+      fetchTasks();
+    }
+  }, [id]);
 
   const handleAddTask = async () => {
     if (tasks.trim() === "") {
@@ -18,7 +36,7 @@ const Todo = () => {
       return;
     }
     try {
-      const response = await API.post("/tasks/create", { task: tasks });
+      const response = await API.post("/tasks/create", { task: tasks ,userid: id});
       setTaskList([...taskList, response.data]);
       setTasks("");
     } catch (error) {
