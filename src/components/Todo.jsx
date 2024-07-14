@@ -5,6 +5,7 @@ import DeleteIcon from "../assets/DeleteIcon.png";
 import EditIcon from "../assets/EditIcon.png";
 import SaveIcon from "../assets/SaveIcon.png";
 import EraseIcon from "../assets/EraseIcon.png";
+import TaskDone from "../assets/TaskDone.png";
 const Todo = () => {
   const [tasks, setTasks] = useState("");
   const [taskList, setTaskList] = useState([]);
@@ -54,6 +55,12 @@ const Todo = () => {
     } catch (error) {
       console.error("Error deleting task:", error);
     }
+  };
+
+  const handleMarkAsDone = (index) => {
+    const updatedTasks = [...taskList];
+    updatedTasks[index].completed = true;
+    setTaskList(updatedTasks);
   };
 
   return (
@@ -120,10 +127,11 @@ const Todo = () => {
                   </>
                 ) : (
                   <>
-                    <span className="px-4 py-2 w-[81%]   border border-1  font-semibold font-sans text-white break-words inline-block  ">
+                    <span className={`px-4 py-2 w-[81%]   border border-1  font-semibold font-sans text-white break-words inline-block ${task.completed ? 'line-through' : ''} `}>
                       {task.task}
                     </span>
                     <div className="flex items-end justify-end gap-2 ml-5">
+                      {!task.completed && (
                     <div className="relative flex  group">
                       <button
                         onClick={() => handleEdit(index)}
@@ -135,6 +143,7 @@ const Todo = () => {
                         Edit
                       </span>
                     </div>
+                    )}
                     <div className="relative flex  group">
                       <button
                         onClick={() => handleDelete(index)}
@@ -148,6 +157,21 @@ const Todo = () => {
                       </button>
                       <span className="absolute bottom-10 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                         Delete
+                      </span>
+                    </div>
+                    <div className="relative flex  group">
+                      <button
+                        onClick={() => handleMarkAsDone(index)}
+                        className="flex "
+                      >
+                        <img
+                          src={TaskDone}
+                          alt="taskdone"
+                          className="w-8 h-7"
+                        />
+                      </button>
+                      <span className="absolute bottom-10 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        done
                       </span>
                     </div>
                     </div>
