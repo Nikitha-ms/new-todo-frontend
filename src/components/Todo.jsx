@@ -58,7 +58,7 @@ const Todo = () => {
 
   return (
     <div className="flex justify-center items-center bg-[#3d1431] h-screen w-screen">
-      <div className="flex  flex-col justify-start items-start h-[80%] w-[50%]  bg-gray-700 rounded-xl m-[20px] ">
+      <div className="flex  flex-col justify-start items-start h-[80%] w-[50%]  bg-gray-700 rounded-xl m-[20px]  ">
         <h1 className="text-2xl  text-white   font-bold ml-[80px] mt-[5%] mb-5">
           Awesome Todo site
         </h1>
@@ -88,59 +88,75 @@ const Todo = () => {
             </span>
           </div>
           <div className="relative flex items-center justify-center group ml-2">
-          <button
-            onClick={() => setTasks("")}
-            className="flex items-center justify-center"
-          >
-            <img src={EraseIcon} alt="Clear" className="w-8 h-7" />
-      
-          </button>
-          <span className="absolute bottom-10 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <button
+              onClick={() => setTasks("")}
+              className="flex items-center justify-center"
+            >
+              <img src={EraseIcon} alt="Clear" className="w-8 h-7" />
+            </button>
+            <span className="absolute bottom-10 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               Clear
             </span>
-
           </div>
         </div>
-        <ul className="list-none ">
-          {taskList.map((task, index) => (
-            <li key={task._id} className="flex items-center gap-2 mb-2">
-              {editIndex === index ? (
-                <>
-                  <input
-                    type="text"
-                    value={editedTask}
-                    onChange={(e) => setEditedTask(e.target.value)}
-                    className="px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <button
-                    onClick={() => handleSave(index)}
-                    className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600"
-                  > 👍
-                    {/* <img src={SaveIcon} alt="Save" className="w-6 h-6" /> */}
-                  </button>
-                </>
-              ) : (
-                <>
-                  <span className="px-4 py-2 w-full text-white border rounded-2xl flex">
-                    {task.task}
-                  </span>
-                  <button
-                    onClick={() => handleEdit(index)}
-                    className="bg-yellow-500 p-2 rounded-full hover:bg-yellow-600 w-full h-full flex justify-center items-center"
-                  >
-                    <img src={EditIcon} alt="Edit" className="w-6 h-6" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(index)}
-                    className="bg-red-500 w-full h-full  p-2 rounded-full hover:bg-red-600 flex items-center justify-center"
-                  >
-                    <img src={DeleteIcon} alt="Delete" className="w-6 h-6" />
-                  </button>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
+        <div className="flex flex-row w-[90%] justify-center items-center gap-2 mb-2 ml-[80px]">
+          <ul className="list-none  w-full max-h-[calc(80vh-200px)] overflow-y-auto overflow-x-hidden pr-2">
+            {taskList.map((task, index) => (
+              <li key={task._id} className="flex items-end gap-2 mb-2">
+                {editIndex === index ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editedTask}
+                      onChange={(e) => setEditedTask(e.target.value)}
+                      className="px-4 py-2 border w-full  font-semibold font-sans  focus:outline-none focus:ring-2 focus:ring-black"
+                    />
+                    <button
+                      onClick={() => handleSave(index)}
+                      className="flex items-center justify-center w-10 h-10"
+                    >
+                      <img src={SaveIcon} alt="Save" className="w-6 h-6" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <span className="px-4 py-2 w-[81%]   border border-1  font-semibold font-sans text-white break-words inline-block  ">
+                      {task.task}
+                    </span>
+                    <div className="flex items-end justify-end gap-2 ml-5">
+                    <div className="relative flex  group">
+                      <button
+                        onClick={() => handleEdit(index)}
+                        className="flex"
+                      >
+                        <img src={EditIcon} alt="Edit" className="w-8 h-7" />
+                      </button>
+                      <span className="absolute bottom-10 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        Edit
+                      </span>
+                    </div>
+                    <div className="relative flex  group">
+                      <button
+                        onClick={() => handleDelete(index)}
+                        className="flex "
+                      >
+                        <img
+                          src={DeleteIcon}
+                          alt="Delete"
+                          className="w-8 h-7"
+                        />
+                      </button>
+                      <span className="absolute bottom-10 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        Delete
+                      </span>
+                    </div>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
