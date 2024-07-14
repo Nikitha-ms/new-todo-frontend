@@ -8,30 +8,40 @@ const Login = ({ setIsLogin }) => {
     email: "",
     password: "",
   });
-  const [loginError, setLoginError] = useState("");
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    login: ""
+  });
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
-    setLoginError("");
+    setErrors({ ...errors, [e.target.name]: "", login: "" });
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (data.email === "" || data.password === "") {
-      alert("Please fill all the fields");
+    let errorMessages = {};
+    if (data.email === "") {
+      errorMessages.email = "Email is required";
+    }
+    if (data.password === "") {
+      errorMessages.password = "Password is required";
+    }
+    if (Object.keys(errorMessages).length > 0) {
+      setErrors(errorMessages);
       return;
-    } else {
-      try {
-        const res = await login(data.email, data.password);
-        if (!res.success) {
-          throw res.error;
-        }
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-        setLoginError(error.message || "An error occurred during login.");
+    }
+
+    try {
+      const res = await login(data.email, data.password);
+      if (!res.success) {
+        throw res.error;
       }
-      console.log(loginError);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      setErrors({ ...errors, login: error.message || "An error occurred during login." });
     }
   };
 
@@ -48,6 +58,7 @@ const Login = ({ setIsLogin }) => {
             onChange={handleChange}
             className="mb-2 p-2 w-[50%] rounded-lg font-sans font-semibold"
           />
+          {errors.email && <p className="text-red-500">{errors.email}</p>}
           <input
             type="password"
             name="password"
@@ -56,7 +67,8 @@ const Login = ({ setIsLogin }) => {
             onChange={handleChange}
             className="mb-2 p-2 w-[50%] rounded-lg font-sans font-semibold"
           />
-          {loginError && <p className="text-red-500">{loginError}</p>}
+          {errors.password && <p className="text-red-500">{errors.password}</p>}
+          {errors.login && <p className="text-red-500">{errors.login}</p>}
           <button
             onClick={handleLogin}
             className="mt-4 bg-blue-500 w-[50%] text-white p-2 rounded-lg shadow-2xl font-sans font-bold"
