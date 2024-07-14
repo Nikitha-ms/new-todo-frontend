@@ -159,6 +159,7 @@ const Todo = () => {
                         Delete
                       </span>
                     </div>
+                    {!task.completed && (
                     <div className="relative flex  group">
                       <button
                         onClick={() => handleMarkAsDone(index)}
@@ -174,6 +175,7 @@ const Todo = () => {
                         done
                       </span>
                     </div>
+                    )}
                     </div>
                   </>
                 )}
