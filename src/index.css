@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* *{
-    outline:1px solid red;
-} */ 
+/* * {
+  outline: 1px solid red;
+}  */
+
+body{
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+*::-webkit-scrollbar,
+*::-webkit-scrollbar-thumb {
+  width: 25px;
+  border-radius: 13px;
+  background-clip: padding-box;
+  border: 10px solid transparent;
+}
+
+*::-webkit-scrollbar-thumb {        
+  box-shadow: inset 0 0 0 10px white;
+}
+
