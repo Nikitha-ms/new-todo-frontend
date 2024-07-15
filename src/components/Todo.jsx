@@ -75,11 +75,15 @@ const Todo = () => {
     }
   };
 
-  const handleMarkAsDone = (index) => {
-    const updatedTasks = [...taskList];
-    updatedTasks[index].completed = true;
-    setTaskList(updatedTasks);
-  };
+ const handleMarkAsDone = async (index) => {
+  const taskId = taskList[index]._id;
+  try {
+    const response = await API.put(`/tasks/complete/${taskId}`);
+    setTaskList(taskList.map((task, i) => (i === index ? response.data : task)));
+  } catch (error) {
+    console.error("Error marking task as done:", error);
+  }
+};
 
   return (
     <div className="flex justify-center items-center bg-[#3d1431] h-screen w-screen">
@@ -157,7 +161,7 @@ const Todo = () => {
                       >
                         <img src={EditIcon} alt="Edit" className="w-8 h-7" />
                       </button>
-                      <span className="absolute bottom-10 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <span className="absolute bottom-2 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                         Edit
                       </span>
                     </div>
@@ -173,7 +177,7 @@ const Todo = () => {
                           className="w-8 h-7"
                         />
                       </button>
-                      <span className="absolute bottom-10 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <span className="absolute bottom-2 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                         Delete
                       </span>
                     </div>
@@ -189,7 +193,7 @@ const Todo = () => {
                           className="w-8 h-7"
                         />
                       </button>
-                      <span className="absolute bottom-10 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <span className="absolute bottom-2 bg-gray-700 text-white text-md border border-white  rounded-xl  py-1 px-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                         done
                       </span>
                     </div>
